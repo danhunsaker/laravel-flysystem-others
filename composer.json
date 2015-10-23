@@ -3,7 +3,7 @@
     "description": "Automatically registers every third-party Flysystem adapter it recognizes as a Laravel Filesystem Driver.",
     "type": "library",
     "require": {
-        "php": "^5.6",
+        "php": ">=5.5.9",
         "illuminate/support": "^5.1",
         "illuminate/filesystem": "^5.1",
         "league/flysystem": "^1.0",
