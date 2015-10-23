@@ -179,7 +179,7 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
     
     protected function buildMirrors($disks)
     {
-        $main = Storage::disk(Arr::head($disks))->getAdapter();
+        $main = Storage::disk(reset($disks))->getAdapter();
 
         if (count($disks) > 2)
         {
@@ -187,7 +187,7 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
         }
         else
         {
-            $second = Storage::disk(Arr::last($disks))->getAdapter();
+            $second = Storage::disk(end($disks))->getAdapter();
         }
 
         return new \League\Flysystem\Replicate\ReplicateAdapter(new \Litipk\Flysystem\Fallback\FallbackAdapter($main, $second, true), $second);
