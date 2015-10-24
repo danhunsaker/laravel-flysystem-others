@@ -35,6 +35,7 @@ Be sure to register this one *instead of* `Danhunsaker\Laravel\Flysystem\Flysyst
 
 The best place to check for which adapters are supported by this package is the Composer suggestions, but here's a quick (not-guaranteed-up-to-date) list as well:
 
+- Aliyun OSS : [orzcc/aliyun-oss](https://packagist.org/packages/orzcc/aliyun-oss) or [shion/aliyun-oss](https://packagist.org/packages/shion/aliyun-oss)
 - Baidu Bos : [zhuxiaoqiao/flysystem-baidu-bos](https://packagist.org/packages/zhuxiaoqiao/flysystem-baidu-bos)
 - Cloudinary: [enl/flysystem-cloudinary](https://packagist.org/packages/enl/flysystem-cloudinary) or [t3chnik/flysystem-cloudinary-adapter](https://packagist.org/packages/t3chnik/flysystem-cloudinary-adapter)
 - Eloquent: [rokde/flysystem-local-database-adapter](https://packagist.org/packages/rokde/flysystem-local-database-adapter)

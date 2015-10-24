@@ -128,6 +128,27 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
             });
         }
         
+        if (class_exists('\Orzcc\AliyunOss\AliyunOssAdapter'))
+        {
+            Storage::extend('oss', function($app, $config) use ($fsClass) {
+                $ossconfig = [
+                    'AccessKeyId'       => $config['access_id'],
+                    'AccessKeySecret'   => $config['access_key']
+                ];
+                
+                if (isset($config['endpoint']) && !empty($config['endpoint']))
+                    $ossconfig['Endpoint'] = $config['endpoint'];
+                    
+                return new $fsClass(new \Orzcc\AliyunOss\AliyunOssAdapter(\Aliyun\OSS\OSSClient::factory($ossconfig), $config['bucket'], $config['prefix']));
+            });
+        }
+        elseif (class_exists('\Shion\Aliyun\OSS\Adapter\OSSAdapter'))
+        {
+            Storage::extend('oss', function($app, $config) use ($fsClass) {
+                return new $fsClass(new \Shion\Aliyun\OSS\Adapter\OSSAdapter(new \Shion\Aliyun\OSS\Client\OSSClient($config), $config['bucket']));
+            });
+        }
+        
         if (class_exists('\EQingdan\Flysystem\Qiniu\QiniuAdapter'))
         {
             Storage::extend('qiniu', function($app, $config) use ($fsClass) {
