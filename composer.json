@@ -11,6 +11,7 @@
     },
     "suggest": {
         "coldwind/flysystem-sae": "Required to use the 'temp' adapter (dev-master)",
+        "danhunsaker/flysystem-redis": "Required to use the 'redis' adapter (^1.0)",
         "emgag/flysystem-tempdir": "Required to use the 'temp' adapter (^0.1)",
         "engineor/flysystem-runabove": "Required to use the 'runabove' adapter (^1.0)",
         "enl/flysystem-cloudinary": "One of two options to use the 'cloudinary' adapter (dev-master)",

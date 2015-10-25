@@ -162,6 +162,15 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
             });
         }
         
+        if (class_exists('\Danhunsaker\Flysystem\Redis\RedisAdapter'))
+        {
+            Storage::extend('redis', function($app, $config) use ($fsClass) {
+                $client = $app->make('redis')->connection(Arr::get($config, 'connection', 'default'));
+                
+                return new $fsClass(new \Danhunsaker\Flysystem\Redis\RedisAdapter($client));
+            });
+        }
+        
         if (class_exists('\Engineor\Flysystem\RunaboveAdapter'))
         {
             Storage::extend('runabove', function($app, $config) use ($fsClass) {
