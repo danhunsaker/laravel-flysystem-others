@@ -1,5 +1,7 @@
 ## Laravel Flysystem Others
 
+[![Join the chat at https://gitter.im/danhunsaker/laravel-flysystem-others](https://badges.gitter.im/danhunsaker/laravel-flysystem-others.svg)](https://gitter.im/danhunsaker/laravel-flysystem-others?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Total Downloads](https://poser.pugx.org/danhunsaker/laravel-flysystem-others/d/total.svg)](https://packagist.org/packages/danhunsaker/laravel-flysystem-others)
 [![Latest Stable Version](https://poser.pugx.org/danhunsaker/laravel-flysystem-others/v/stable.svg)](https://packagist.org/packages/danhunsaker/laravel-flysystem-others)
 [![Latest Unstable Version](https://poser.pugx.org/danhunsaker/laravel-flysystem-others/v/unstable.svg)](https://packagist.org/packages/danhunsaker/laravel-flysystem-others)
