@@ -2,6 +2,7 @@
 
 namespace Danhunsaker\Laravel\Flysystem;
 
+use App;
 use Danhunsaker\Laravel\Flysystem\FlysystemServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
@@ -209,5 +210,9 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
         $this->publishes([$source => config_path('filesystems.php')]);
 
         $this->mergeConfigFrom($source, 'filesystems');
+
+        if (class_exists('Twistor\FlysystemStreamWrapper')) {
+            App::register('Danhunsaker\Laravel\Flysystem\FlysystemStreamWrapperServiceProvider');
+        }
     }
 }

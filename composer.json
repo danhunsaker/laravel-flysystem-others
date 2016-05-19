@@ -9,7 +9,7 @@
         "danhunsaker/laravel-flysystem-service": "^1.0"
     },
     "suggest": {
-        "coldwind/flysystem-sae": "Required to use the 'temp' adapter (dev-master)",
+        "coldwind/flysystem-sae": "Required to use the 'sae' adapter (dev-master)",
         "danhunsaker/flysystem-redis": "Required to use the 'redis' adapter (^1.0)",
         "emgag/flysystem-tempdir": "Required to use the 'temp' adapter (^0.1)",
         "engineor/flysystem-runabove": "Required to use the 'runabove' adapter (^1.0)",
@@ -27,6 +27,7 @@
         "shion/aliyun-oss": "The second of two options to use the 'oss' adapter (dev-master)",
         "superbalist/flysystem-google-storage": "Required to use the 'google' adapter (^1.0)",
         "t3chnik/flysystem-cloudinary-adapter": "The second of two options to use the 'cloudinary' adapter (dev-master)",
+        "twistor/flysystem-stream-wrapper": "Allows access to Flysystem drives using 'drive://path' streams (^1.0)",
         "zhuxiaoqiao/flysystem-baidu-bos": "Required to use the 'bos' adapter (^1.0)"
     },
     "license": "MIT",

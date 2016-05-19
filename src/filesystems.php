@@ -333,4 +333,23 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Automatically Register Stream Wrappers
+    |--------------------------------------------------------------------------
+    |
+    | This is a list of the filesystem "disks" to automatically register the
+    | stream wrappers for on application start.  Any "disk" you don't want to
+    | register on every application load will have to be manually referenced
+    | before attempting stream access, as the stream wrapper is otherwise only
+    | registered when used.
+    |
+    */
+
+    'autowrap' => [
+
+        'local',
+
+    ],
+
 ];
