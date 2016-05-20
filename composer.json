@@ -1,7 +1,12 @@
 {
     "name": "danhunsaker/laravel-flysystem-others",
     "description": "Automatically registers every third-party Flysystem adapter it recognizes as a Laravel Filesystem Driver.",
-    "type": "library",
+    "keywords": ["laravel", "flysystem"],
+    "license": "MIT",
+    "authors": [{
+        "name": "Daniel Hunsaker",
+        "email": "danhunsaker@gmail.com"
+    }],
     "require": {
         "illuminate/support": "^5.1",
         "illuminate/filesystem": "^5.1",
@@ -30,13 +35,6 @@
         "twistor/flysystem-stream-wrapper": "Allows access to Flysystem drives using 'drive://path' streams (^1.0)",
         "zhuxiaoqiao/flysystem-baidu-bos": "Required to use the 'bos' adapter (^1.0)"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Daniel Hunsaker",
-            "email": "danhunsaker@gmail.com"
-        }
-    ],
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
