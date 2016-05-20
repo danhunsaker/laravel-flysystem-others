@@ -3,6 +3,8 @@
 namespace Danhunsaker\Laravel\Flysystem;
 
 use Danhunsaker\Laravel\Flysystem\FlysystemManager;
+use Illuminate\Support\Arr;
+use Log;
 
 class FlysystemOtherManager extends FlysystemManager
 {

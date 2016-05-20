@@ -2,13 +2,8 @@
 
 namespace Danhunsaker\Laravel\Flysystem;
 
-use App;
 use Danhunsaker\Laravel\Flysystem\FlysystemOtherManager;
 use Danhunsaker\Laravel\Flysystem\FlysystemServiceProvider;
-use Illuminate\Filesystem\FilesystemServiceProvider;
-use Illuminate\Support\Arr;
-use Log;
-use Storage;
 
 class FlysystemOtherServiceProvider extends FlysystemServiceProvider
 {
