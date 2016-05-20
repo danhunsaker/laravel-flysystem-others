@@ -48,6 +48,10 @@ from `danhunsaker/laravel-flysystem-service`, you don't need to add it as well.
 In fact, doing so will probably cause some issues with your app, as both
 providers will attempt to handle the PHP League drivers at the same time.
 
+Of course, you'll want to read through its `README` as well, to see what options
+it supports that this package piggy-backs on, such as those for the cache
+decorator.
+
 ## Setup ##
 
 For added flexibility, such as the ability to open ZIP files on remote storage,
@@ -116,7 +120,7 @@ well:
 - Temp:
   [emgag/flysystem-tempdir](https://packagist.org/packages/emgag/flysystem-tempdir)
 
-## Issues, Contributions, Etc ##
+## Contributions ##
 
 Pull requests, bug reports, and so forth are all welcome on [GitHub][].
 
