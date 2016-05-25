@@ -9,10 +9,7 @@ use Log;
 class FlysystemOtherManager extends FlysystemManager
 {
     /**
-     * Create a new filesystem manager instance.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
+     * {@inheritdoc}
      */
     public function __construct($app)
     {
@@ -191,10 +188,7 @@ class FlysystemOtherManager extends FlysystemManager
     }
 
     /**
-     * Resolve the given disk.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * {@inheritdoc}
      */
     protected function resolve($name)
     {
