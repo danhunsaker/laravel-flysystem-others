@@ -14,7 +14,9 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
      */
     public function boot()
     {
-        //
+        foreach ((array) $this->app['config']['filesystems.autowrap'] as $drive) {
+            $this->app['filesystem']->disk($drive);
+        }
     }
 
     /**

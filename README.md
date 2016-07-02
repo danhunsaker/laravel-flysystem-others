@@ -14,19 +14,18 @@ Registers recognized third-party Flysystem adapters with Laravel automatically.
 This lets you use third-party adapters without having to write your own service
 providers to load them properly.  It automatically detects which adapters are
 available, and registers only the ones actually installed.  It also detects
-whether the [Eventable](https://github.com/thephpleague/flysystem-eventable-filesystem)
-version of Flysystem is available, and if so, it switches to it, letting you
-listen in on Flysystem [events](http://event.thephpleague.com/) and affect them
+whether the [Eventable][] version of Flysystem is available, and if so, it
+switches to it, letting you listen in on Flysystem [events][] and affect them
 accordingly.
 
 > Note: While this package only recognizes adapters NOT officially supported by
-> [The PHP League](https://github.com/thephpleague?query=flysystem), it *does*
-> depend on [danhunsaker/laravel-flysystem-service](https://github.com/danhunsaker/laravel-flysystem-service),
-> so installing this package *will* let you use them as well.
+> [The PHP League][], it *does* depend on
+> [danhunsaker/laravel-flysystem-service][], so installing this package *will*
+> let you use them as well.
 
 ## Installation ##
 
-The usual methods for using [Composer](https://getcomposer.org) apply here:
+The usual methods for using [Composer][] apply here:
 
     composer require danhunsaker/laravel-flysystem-others
 
@@ -56,21 +55,19 @@ decorator.
 ## Setup ##
 
 For added flexibility, such as the ability to open ZIP files on remote storage,
-you can also install [twistor/flysystem-stream-wrapper](https://packagist.org/packages/twistor/flysystem-stream-wrapper),
-which will register each of the drives in your `config/filesystems.php` file as
-a stream protocol (though only when each is accessed the first time, unless you
-add them to the `autowrap` parameter in the configuration).  In the example of
-accessing remote ZIP files, you would then simply need to prefix the ZIP file's
-path with the name of the drive it's available on, as a URL scheme (something
-like `dropbox://path/to/file.zip`).
+you can also install [twistor/flysystem-stream-wrapper][], which will register
+each of the drives in your `config/filesystems.php` file as a stream protocol
+(though only when each is accessed the first time, unless you add them to the
+`autowrap` parameter in the configuration).  In the example of accessing remote
+ZIP files, you would then simply need to prefix the ZIP file's path with the
+name of the drive it's available on, as a URL scheme (something like
+`dropbox://path/to/file.zip`).
 
 Finally, as with `danhunsaker/laravel-flysystem-service`, you can get example
 definitions for all supported filesystem drivers by publishing the replacement
 `filesystems` config - just run the following Artisan command:
 
-```
-php artisan vendor:publish --provider=Danhunsaker\\Laravel\\Flysystem\\FlysystemOtherServiceProvider --force
-```
+    php artisan vendor:publish --provider=Danhunsaker\\Laravel\\Flysystem\\FlysystemOtherServiceProvider --force
 
 The `--force` flag is required to overwrite the existing `filesystems` config
 that ships with Laravel.  You can also rename the existing file, then run the
@@ -83,43 +80,40 @@ The best place to check for which adapters are supported by this package is the
 Composer suggestions, but here's a quick (not-guaranteed-up-to-date) list as
 well:
 
-- Aliyun OSS:
-  [orzcc/aliyun-oss](https://packagist.org/packages/orzcc/aliyun-oss)
-  or [shion/aliyun-oss](https://packagist.org/packages/shion/aliyun-oss)
-- Baidu Bos:
-  [zhuxiaoqiao/flysystem-baidu-bos](https://packagist.org/packages/zhuxiaoqiao/flysystem-baidu-bos)
-- Cloudinary:
-  [enl/flysystem-cloudinary](https://packagist.org/packages/enl/flysystem-cloudinary)
-  or [t3chnik/flysystem-cloudinary-adapter](https://packagist.org/packages/t3chnik/flysystem-cloudinary-adapter)
-- Eloquent:
-  [rokde/flysystem-local-database-adapter](https://packagist.org/packages/rokde/flysystem-local-database-adapter)
-- Fallback:
-  [litipk/flysystem-fallback-adapter](https://packagist.org/packages/litipk/flysystem-fallback-adapter)
-- GitHub:
-  [potherca/flysystem-github](https://packagist.org/packages/potherca/flysystem-github)
-- Google Cloud Storage:
-  [superbalist/flysystem-google-storage](https://packagist.org/packages/superbalist/flysystem-google-storage)
-- Google Drive:
-  [ignited/flysystem-google-drive](https://packagist.org/packages/ignited/flysystem-google-drive)
-- Mirror:
-  A "meta-adapter" which combines the Fallback and Replicate adapters,
-  if both are available.
-- OneDrive:
-  [jacekbarecki/flysystem-onedrive](https://packagist.org/packages/jacekbarecki/flysystem-onedrive)
-  or [ignited/flysystem-onedrive](https://packagist.org/packages/ignited/flysystem-onedrive)
-- Qiniu:
-  [eqingdan/flysystem-qiniu](https://packagist.org/packages/eqingdan/flysystem-qiniu)
-  or [polev/flysystem-qiniu](https://packagist.org/packages/polev/flysystem-qiniu)
-- Redis:
-  [danhunsaker/flysystem-redis](https://packagist.org/packages/danhunsaker/flysystem-redis)
-- Runabove:
-  [engineor/flysystem-runabove](https://packagist.org/packages/engineor/flysystem-runabove)
-- Sae:
-  [coldwind/flysystem-sae](https://packagist.org/packages/coldwind/flysystem-sae)
-- SMB/CIFS:
-  [robgridley/flysystem-smb](https://packagist.org/packages/robgridley/flysystem-smb)
-- Temp:
-  [emgag/flysystem-tempdir](https://packagist.org/packages/emgag/flysystem-tempdir)
+-   Aliyun OSS: [orzcc/aliyun-oss][] or [shion/aliyun-oss][]
+
+-   Baidu Bos: [zhuxiaoqiao/flysystem-baidu-bos][]
+
+-   Cloudinary: [enl/flysystem-cloudinary][] or
+    [t3chnik/flysystem-cloudinary-adapter][]
+
+-   Eloquent: [rokde/flysystem-local-database-adapter][]
+
+-   Fallback: [litipk/flysystem-fallback-adapter][]
+
+-   GitHub: [potherca/flysystem-github][]
+
+-   Google Cloud Storage: [superbalist/flysystem-google-storage][]
+
+-   Google Drive: [ignited/flysystem-google-drive][]
+
+-   Mirror: A "meta-adapter" which combines the Fallback and Replicate adapters,
+    if both are available.
+
+-   OneDrive: [jacekbarecki/flysystem-onedrive][] or
+    [ignited/flysystem-onedrive][]
+
+-   Qiniu: [eqingdan/flysystem-qiniu][] or [polev/flysystem-qiniu][]
+
+-   Redis: [danhunsaker/flysystem-redis][]
+
+-   Runabove: [engineor/flysystem-runabove][]
+
+-   Sae: [coldwind/flysystem-sae][]
+
+-   SMB/CIFS: [robgridley/flysystem-smb][]
+
+-   Temp: [emgag/flysystem-tempdir][]
 
 ## Contributions ##
 
@@ -130,4 +124,29 @@ Security issues should be reported directly to [danhunsaker (plus) laraflyplus
 
 And head to [GitHub][] for everything else.
 
-[GitHub]:https://github.com/danhunsaker/laravel-flysystem-others
+[coldwind/flysystem-sae]: https://packagist.org/packages/coldwind/flysystem-sae
+[composer]: https://getcomposer.org
+[danhunsaker/flysystem-redis]: https://packagist.org/packages/danhunsaker/flysystem-redis
+[danhunsaker/laravel-flysystem-service]: https://github.com/danhunsaker/laravel-flysystem-service
+[emgag/flysystem-tempdir]: https://packagist.org/packages/emgag/flysystem-tempdir
+[engineor/flysystem-runabove]: https://packagist.org/packages/engineor/flysystem-runabove
+[enl/flysystem-cloudinary]: https://packagist.org/packages/enl/flysystem-cloudinary
+[eqingdan/flysystem-qiniu]: https://packagist.org/packages/eqingdan/flysystem-qiniu
+[eventable]: https://github.com/thephpleague/flysystem-eventable-filesystem
+[events]: http://event.thephpleague.com/
+[github]: https://github.com/danhunsaker/laravel-flysystem-others
+[ignited/flysystem-google-drive]: https://packagist.org/packages/ignited/flysystem-google-drive
+[ignited/flysystem-onedrive]: https://packagist.org/packages/ignited/flysystem-onedrive
+[jacekbarecki/flysystem-onedrive]: https://packagist.org/packages/jacekbarecki/flysystem-onedrive
+[litipk/flysystem-fallback-adapter]: https://packagist.org/packages/litipk/flysystem-fallback-adapter
+[orzcc/aliyun-oss]: https://packagist.org/packages/orzcc/aliyun-oss
+[polev/flysystem-qiniu]: https://packagist.org/packages/polev/flysystem-qiniu
+[potherca/flysystem-github]: https://packagist.org/packages/potherca/flysystem-github
+[robgridley/flysystem-smb]: https://packagist.org/packages/robgridley/flysystem-smb
+[rokde/flysystem-local-database-adapter]: https://packagist.org/packages/rokde/flysystem-local-database-adapter
+[shion/aliyun-oss]: https://packagist.org/packages/shion/aliyun-oss
+[superbalist/flysystem-google-storage]: https://packagist.org/packages/superbalist/flysystem-google-storage
+[t3chnik/flysystem-cloudinary-adapter]: https://packagist.org/packages/t3chnik/flysystem-cloudinary-adapter
+[the php league]: https://github.com/thephpleague?query=flysystem
+[twistor/flysystem-stream-wrapper]: https://packagist.org/packages/twistor/flysystem-stream-wrapper
+[zhuxiaoqiao/flysystem-baidu-bos]: https://packagist.org/packages/zhuxiaoqiao/flysystem-baidu-bos

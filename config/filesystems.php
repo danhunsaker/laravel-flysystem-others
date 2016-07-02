@@ -53,7 +53,7 @@ return [
 
             // Optional cache settings, available with any storage driver
             'cache'       => [
-                'driver' => 'memory',
+                'driver' => 'laravel',
             ],
 
             // Optional Local Settings...
