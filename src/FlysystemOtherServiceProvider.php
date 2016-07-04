@@ -30,4 +30,14 @@ class FlysystemOtherServiceProvider extends FlysystemServiceProvider
             return new FlysystemOtherManager($this->app);
         });
     }
+
+    /**
+     * Register the expanded configuration.
+     *
+     * @return void
+     */
+    protected function registerConfig()
+    {
+        $this->publishes([realpath(__DIR__ . '/../config/filesystems.php') => config_path('filesystems.php')]);
+    }
 }
