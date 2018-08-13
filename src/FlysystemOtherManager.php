@@ -31,6 +31,18 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
+        if (class_exists('\Spatie\FlysystemDropbox\DropboxAdapter')) {
+            $this->extend('dropbox', function ($app, $config) {
+                $client = new \Spatie\Dropbox\Client($config['authToken']);
+                return $this->createFlysystem(new \Spatie\FlysystemDropbox\DropboxAdapter($client), $config);
+            });
+        } elseif (class_exists('\Srmklive\Dropbox\Adapter\DropboxAdapter')) {
+            $this->extend('dropbox', function ($app, $config) {
+                $client = new \Srmklive\Dropbox\Client\DropboxClient($config['authToken']);
+                return $this->createFlysystem(new \Srmklive\Dropbox\Adapter\DropboxAdapter($client), $config);
+            });
+        }
+
         if (class_exists('\Rokde\Flysystem\Adapter\LocalDatabaseAdapter')) {
             $this->extend('eloquent', function ($app, $config) {
                 return $this->createFlysystem(new \Rokde\Flysystem\Adapter\LocalDatabaseAdapter($app->make(Arr::get($config, 'model', '\Rokde\Flysystem\Adapter\Model\FileModel'))), $config);
