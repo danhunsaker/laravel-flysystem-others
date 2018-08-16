@@ -15,19 +15,35 @@ class FlysystemOtherManager extends FlysystemManager
     {
         parent::__construct($app);
 
+        if (class_exists('\Mhetreramesh\Flysystem\BackblazeAdapter')) {
+            $this->extend('backblaze', function ($app, $config) {
+                return $this->createFlysystem(new \Mhetreramesh\Flysystem\BackblazeAdapter(new \BackblazeB2\Client($config['account_id'], $config['application_key']), $config['bucket']), $config);
+            });
+        }
+
         if (class_exists('\Zhuxiaoqiao\Flysystem\BaiduBos\BaiduBosAdapter')) {
             $this->extend('bos', function ($app, $config) {
                 return $this->createFlysystem(new \Zhuxiaoqiao\Flysystem\BaiduBos\BaiduBosAdapter(new \BaiduBce\Services\Bos\BosClient(Arr::except($config, ['driver', 'bucket'])), $config['bucket']), $config);
             });
         }
 
-        if (class_exists('\Enl\Flysystem\Cloudinary\CloudinaryAdapter')) {
+        if (class_exists('\mgriego\Flysystem\ClamAV\ClamAvScannerAdapter')) {
+            $this->extend('clamav', function ($app, $config) {
+                return $this->createFlysystem(new \mgriego\Flysystem\ClamAV\ClamAvScannerAdapter(new \Xenolope\Quahog\Client((new \Socket\Raw\Factory())->createClient($config['server'])), $this->disk($config['drive'])->getAdapter(), Arr::get($config, 'copy_scan', false)));
+            });
+        }
+
+        if (class_exists('\CarlosOCarvalho\Flysystem\Cloudinary\CloudinaryAdapter')) {
             $this->extend('cloudinary', function ($app, $config) {
-                return $this->createFlysystem(new \Enl\Flysystem\Cloudinary\CloudinaryAdapter(new \Enl\Flysystem\Cloudinary\ApiFacade($config)), $config);
+                return $this->createFlysystem(new \CarlosOCarvalho\Flysystem\Cloudinary\CloudinaryAdapter(Arr::except($config, ['driver'])), $config);
+            });
+        } elseif (class_exists('\Enl\Flysystem\Cloudinary\CloudinaryAdapter')) {
+            $this->extend('cloudinary', function ($app, $config) {
+                return $this->createFlysystem(new \Enl\Flysystem\Cloudinary\CloudinaryAdapter(new \Enl\Flysystem\Cloudinary\ApiFacade(Arr::except($config, ['driver']))), $config);
             });
         } elseif (class_exists('\T3chnik\FlysystemCloudinaryAdapter\CloudinaryAdapter')) {
             $this->extend('cloudinary', function ($app, $config) {
-                return $this->createFlysystem(new \T3chnik\FlysystemCloudinaryAdapter\CloudinaryAdapter($config, new \Cloudinary\Api), $config);
+                return $this->createFlysystem(new \T3chnik\FlysystemCloudinaryAdapter\CloudinaryAdapter(Arr::except($config, ['driver']), new \Cloudinary\Api), $config);
             });
         }
 
@@ -55,15 +71,28 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
-        if (class_exists('\Potherca\Flysystem\Github\GithubAdapter')) {
-            $this->extend('github', function ($app, $config) {
-                $settings = new \Potherca\Flysystem\Github\Settings($config['project'], [\Potherca\Flysystem\Github\Settings::AUTHENTICATE_USING_TOKEN, $config['token']]);
+        if (class_exists('\PrivateIT\FlySystem\GoogleDrive\GoogleDriveAdapter')) {
+            $this->extend('gdrive', function ($app, $config) {
+                $client = new \Google_Client();
+                $client->setClientId($config['client_id']);
+                $client->setClientSecret($config['secret']);
+                $client->refreshToken($config['token']);
 
-                return $this->createFlysystem(new \Potherca\Flysystem\Github\GithubAdapter(new \Potherca\Flysystem\Github\Api(new \Github\Client(), $settings)), $config);
+                $adapter = new \PrivateIT\FlySystem\GoogleDrive\GoogleDriveAdapter(new \Google_Service_Drive($client), Arr::get($config, 'root', null));
+                $adapter->setPathManager(new GoogleSheetsPathManager(new \Google_Service_Sheets($client), Arr::get($config, $config, 'paths_sheet', null), $this->disk(Arr::get($config, 'paths_cache_drive', config('filesystems.default')))));
+
+                return $this->createFlysystem($adapter, $config);
             });
-        }
+        } elseif (class_exists('\Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter')) {
+            $this->extend('gdrive', function ($app, $config) {
+                $client = new \Google_Client();
+                $client->setClientId($config['client_id']);
+                $client->setClientSecret($config['secret']);
+                $client->refreshToken($config['token']);
 
-        if (class_exists('\Ignited\Flysystem\GoogleDrive\GoogleDriveAdapter')) {
+                return $this->createFlysystem(new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter(new \Google_Service_Drive($client), Arr::get($config, 'root', null)), $config);
+            });
+        } elseif (class_exists('\Ignited\Flysystem\GoogleDrive\GoogleDriveAdapter')) {
             $this->extend('gdrive', function ($app, $config) {
                 $client = new \Google_Client();
                 $client->setClientId($config['client_id']);
@@ -79,18 +108,37 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
-        if (class_exists('\Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter')) {
-            $this->extend('google', function ($app, $config) {
-                $client = new \Google_Client();
-                $client->setAssertionCredentials(new \Google_Auth_AssertionCredentials(
-                    $config['account'],
-                    [\Google_Service_Storage::DEVSTORAGE_FULL_CONTROL],
-                    file_get_contents($config['p12_file']),
-                    $config['secret']
-                ));
-                $client->setDeveloperKey($config['developer_key']);
+        if (class_exists('\Potherca\Flysystem\Github\GithubAdapter')) {
+            $this->extend('github', function ($app, $config) {
+                $settings = new \Potherca\Flysystem\Github\Settings($config['project'], [\Potherca\Flysystem\Github\Settings::AUTHENTICATE_USING_TOKEN, $config['token']]);
 
-                return $this->createFlysystem(new \Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter(new \Google_Service_Storage($client), $config['bucket']), $config);
+                return $this->createFlysystem(new \Potherca\Flysystem\Github\GithubAdapter(new \Potherca\Flysystem\Github\Api(new \Github\Client(), $settings)), $config);
+            });
+        }
+
+        if (class_exists('\CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter')) {
+            $this->extend('google', function ($app, $config) {
+                return $this->createFlysystem(new \CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter(new \Google\Cloud\Storage\StorageClient([
+                    'projectId' => $config['project_id'],
+                    'keyFilePath' => Arr::get($config, 'key_file'),
+                ]), Arr::only($config, ['bucket', 'prefix', 'url'])), $config);
+            });
+        } elseif (class_exists('\Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter')) {
+            $this->extend('google', function ($app, $config) {
+                return $this->createFlysystem(new \Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter(new \Google\Cloud\Storage\StorageClient([
+                    'projectId' => $config['project_id'],
+                    'keyFilePath' => Arr::get($config, 'key_file'),
+                ]), $config['bucket']), $config);
+            });
+        }
+
+        if (class_exists('\Twistor\Flysystem\GuzzleAdapter')) {
+            $this->extend('http', function ($app, $config) {
+                return $this->createFlysystem(new \Twistor\Flysystem\GuzzleAdapter($config['root']));
+            });
+        } elseif (class_exists('\Twistor\Flysystem\Http\HttpAdapter')) {
+            $this->extend('http', function ($app, $config) {
+                return $this->createFlysystem(new \Twistor\Flysystem\Http\HttpAdapter($config['root'], Arr::get($config, 'use_head', true), Arr::get($config, 'context')));
             });
         }
 
@@ -100,11 +148,7 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
-        if (class_exists('\JacekBarecki\FlysystemOneDrive\Adapter\OneDriveAdapter')) {
-            $this->extend('onedrive', function ($app, $config) {
-                return $this->createFlysystem(new \JacekBarecki\FlysystemOneDrive\Adapter\OneDriveAdapter(new \JacekBarecki\FlysystemOneDrive\Client\OneDriveClient(Arr::get($config, 'access_token'), new \GuzzleHttp\Client())), $config);
-            });
-        } elseif (class_exists('\Ignited\Flysystem\OneDrive\OneDriveAdapter')) {
+        if (class_exists('\Ignited\Flysystem\OneDrive\OneDriveAdapter')) {
             $this->extend('onedrive', function ($app, $config) {
                 $oneConfig = Arr::only($config, ['base_url', 'access_token']);
                 if ($config['use_logger']) {
@@ -115,13 +159,52 @@ class FlysystemOtherManager extends FlysystemManager
 
                 return $this->createFlysystem(new \Ignited\Flysystem\OneDrive\OneDriveAdapter(\Ignited\Flysystem\OneDrive\OneDriveClient::factory($oneConfig, $logger)), $config);
             });
+        } elseif (class_exists('\JacekBarecki\FlysystemOneDrive\Adapter\OneDriveAdapter')) {
+            $this->extend('onedrive', function ($app, $config) {
+                return $this->createFlysystem(new \JacekBarecki\FlysystemOneDrive\Adapter\OneDriveAdapter(new \JacekBarecki\FlysystemOneDrive\Client\OneDriveClient(Arr::get($config, 'access_token'), new \GuzzleHttp\Client())), $config);
+            });
+        } elseif (class_exists('\NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter')) {
+            $this->extend('onedrive', function ($app, $config) {
+                $graph = new \Microsoft\Graph\Graph();
+                $graph->setAccessToken($config['access_token']);
+
+                return $this->createFlysystem(new \NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter($graph, Arr::get($config, 'root', 'root')), $config);
+            });
         }
 
-        if (class_exists('\Orzcc\AliyunOss\AliyunOssAdapter')) {
+        if (class_exists('\Nimbusoft\Flysystem\OpenStack\SwiftAdapter')) {
+            $this->extend('openstack', function ($app, $config) {
+                $container = (new \OpenStack\OpenStack([
+                    'authUrl' => $config['auth_url'],
+                    'region'  => $config['region'],
+                    'user'    => [
+                        'id'       => $config['user_id'],
+                        'password' => $config['password']
+                    ],
+                    'scope'   => ['project' => ['id' => $config['project_id']]]
+                ]))->objectStoreV1()->getContainer($config['container']);
+
+                return $this->createFlysystem(new \Nimbusoft\Flysystem\OpenStack\SwiftAdapter($container), $config);
+            });
+        }
+
+        if (class_exists('\Aliyun\Flysystem\AliyunOss\AliyunOssAdapter')) {
+            $this->extend('oss', function ($app, $config) {
+                return $this->createFlysystem(new \Aliyun\Flysystem\AliyunOss\AliyunOssAdapter(new \OSS\OSSClient(Arr::get($config, 'access_id'), Arr::get($config, 'access_key'), Arr::get($config, 'endpoint')), Arr::get($config, 'bucket')), $config);
+            });
+        } elseif (class_exists('\Aobo\OSS\AliyunOssAdapter')) {
+            $this->extend('oss', function ($app, $config) {
+                return $this->createFlysystem(new \Aobo\OSS\AliyunOssAdapter(new \OSS\OSSClient(Arr::get($config, 'access_id'), Arr::get($config, 'access_key'), Arr::get($config, 'endpoint')), Arr::get($config, 'bucket')), $config);
+            });
+        } elseif (class_exists('\ApolloPY\Flysystem\AliyunOss')) {
+            $this->extend('oss', function ($app, $config) {
+                return $this->createFlysystem(new \ApolloPY\Flysystem\AliyunOss(new \OSS\OSSClient(Arr::get($config, 'access_id'), Arr::get($config, 'access_key'), Arr::get($config, 'endpoint')), Arr::get($config, 'bucket'), Arr::get($config, 'prefix')), $config);
+            });
+        } elseif (class_exists('\Orzcc\AliyunOss\AliyunOssAdapter')) {
             $this->extend('oss', function ($app, $config) {
                 $ossconfig = [
-                    'AccessKeyId'       => $config['access_id'],
-                    'AccessKeySecret'   => $config['access_key']
+                    'AccessKeyId'     => $config['access_id'],
+                    'AccessKeySecret' => $config['access_key']
                 ];
 
                 if (isset($config['endpoint']) && ! empty($config['endpoint'])) {
@@ -134,15 +217,78 @@ class FlysystemOtherManager extends FlysystemManager
             $this->extend('oss', function ($app, $config) {
                 return $this->createFlysystem(new \Shion\Aliyun\OSS\Adapter\OSSAdapter(new \Shion\Aliyun\OSS\Client\OSSClient(Arr::except($config, ['driver', 'bucket'])), $config['bucket']), $config);
             });
+        } elseif (class_exists('\Xxtime\Flysystem\Aliyun\OssAdapter')) {
+            $this->extend('oss', function ($app, $config) {
+                $ossconfig = [
+                    'access_id'     => $config['access_id'],
+                    'access_secret' => $config['access_key'],
+                    'bucket'        => $config['bucket'],
+                ];
+
+                if (isset($config['endpoint']) && ! empty($config['endpoint'])) {
+                    $ossconfig['endpoint'] = $config['endpoint'];
+                }
+
+                return $this->createFlysystem(new \Xxtime\Flysystem\Aliyun\OssAdapter($ossconfig), $config);
+            });
+        } elseif (class_exists('\League\Flysystem\AliyunOSS\AliyunOSSAdapter')) {
+        // NOT ACTUALLY A LEAGUE PROJECT!!!
+            $this->extend('oss', function ($app, $config) {
+                return $this->createFlysystem(new \League\Flysystem\AliyunOSS\AliyunOSSAdapter(new \ALIOSS(Arr::get($config, 'access_id'), Arr::get($config, 'access_key'), Arr::get($config, 'endpoint')), Arr::get($config, 'bucket')), $config);
+            });
         }
 
-        if (class_exists('\EQingdan\Flysystem\Qiniu\QiniuAdapter')) {
+        if (class_exists('\Integral\Flysystem\Adapter\PDOAdapter')) {
+            $this->extend('pdo', function ($app, $config) {
+                return $this->createFlysystem(new \Integral\Flysystem\Adapter\PDOAdapter(DB::connection($config['database'])->getPdo()));
+            });
+        } elseif (class_exists('\Phlib\Flysystem\Pdo\PdoAdapter')) {
+            $this->extend('pdo', function ($app, $config) {
+                return $this->createFlysystem(new \Phlib\Flysystem\Pdo\PdoAdapter(DB::connection($config['database'])->getPdo()));
+            });
+        }
+
+        if (class_exists('\Freyo\Flysystem\QcloudCOSv5\Adapter')) {
+            $this->extend('qcloud', function ($app, $config) {
+                $cosconfig = [
+                    'region'          => $config['region'],
+                    'credentials'     => [
+                        'appId'     => $config['app_id'],
+                        'secretId'  => $config['secret_id'],
+                        'secretKey' => $config['secret_key'],
+                    ],
+                    'timeout'         => $config['timeout'],
+                    'bucket'          => $config['bucket'],
+                    'scheme'          => $config['protocol'],
+                ];
+
+                if (array_key_exists('domain', $config)) {
+                    $cosconfig['cdn'] = $config['domain'];
+                }
+
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv5\Adapter($cosconfig));
+            });
+        } elseif (class_exists('\Freyo\Flysystem\QcloudCOSv4\Adapter')) {
+            $this->extend('qcloud', function ($app, $config) {
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv4\Adapter(Arr::except($config, ['driver'])));
+            });
+        } elseif (class_exists('\Freyo\Flysystem\QcloudCOSv3\Adapter')) {
+            $this->extend('qcloud', function ($app, $config) {
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv3\Adapter(Arr::except($config, ['driver', 'region'])));
+            });
+        }
+
+        if (class_exists('\Boofw\Flysystem\Qiniu\QiniuAdapter')) {
+            $this->extend('qiniu', function ($app, $config) {
+                return $this->createFlysystem(new \Boofw\Flysystem\Qiniu\QiniuAdapter($config['accessKey'], $config['secretKey'], $config['bucket']), $config);
+            });
+        } elseif (class_exists('\EQingdan\Flysystem\Qiniu\QiniuAdapter')) {
             $this->extend('qiniu', function ($app, $config) {
                 return $this->createFlysystem(new \EQingdan\Flysystem\Qiniu\QiniuAdapter($config['accessKey'], $config['secretKey'], $config['bucket'], $config['domain']), $config);
             });
-        } elseif (class_exists('\Polev\Flysystem\Qiniu\QiniuAdapter')) {
+        } elseif (class_exists('\Overtrue\Flysystem\Qiniu\QiniuAdapter')) {
             $this->extend('qiniu', function ($app, $config) {
-                return $this->createFlysystem(new \Polev\Flysystem\Qiniu\QiniuAdapter($config['accessKey'], $config['secretKey'], $config['bucket']), $config);
+                return $this->createFlysystem(new \Overtrue\Flysystem\Qiniu\QiniuAdapter($config['accessKey'], $config['secretKey'], $config['bucket'], $config['domain']), $config);
             });
         }
 
@@ -164,9 +310,22 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
-        if (class_exists('\Coldwind\Filesystem\KvdbAdapter')) {
-            $this->extend('sae', function ($app, $config) {
-                return $this->createFlysystem(new \Coldwind\Filesystem\KvdbAdapter(new \Coldwind\Filesystem\KvdbClient), $config);
+        if (class_exists('\ArgentCrusade\Flysystem\Selectel\SelectelAdapter')) {
+            $this->extend('selectel', function ($app, $config) {
+                $storage = new ArgentCrusade\Selectel\CloudStorage\CloudStorage(new ArgentCrusade\Selectel\CloudStorage\Api\ApiClient($config['username'], $config['password']));
+                $container = $storage->getContainer($config['container']);
+
+                if (isset($config['domain'])) {
+                    $container->setUrl($config['domain']);
+                }
+
+                return $this->createFlysystem(new \ArgentCrusade\Flysystem\Selectel\SelectelAdapter($container), $config);
+            });
+        }
+
+        if (class_exists('\Kapersoft\FlysystemSharefile\SharefileAdapter')) {
+            $this->extend('sharefile', function ($app, $config) {
+                return $this->createFlysystem(new \Kapersoft\FlysystemSharefile\SharefileAdapter(new Kapersoft\Sharefile\Client($config['hostname'], $config['client_id'], $config['secret'], $config['username'], $config['password'])), $config);
             });
         }
 
@@ -182,6 +341,18 @@ class FlysystemOtherManager extends FlysystemManager
         if (class_exists('\Emgag\Flysystem\TempdirAdapter')) {
             $this->extend('temp', function ($app, $config) {
                 return $this->createFlysystem(new \Emgag\Flysystem\TempdirAdapter(Arr::get($config, 'prefix'), Arr::get($config, 'tempdir')), $config);
+            });
+        }
+
+        if (class_exists('\JellyBool\Flysystem\Upyun\UpyunAdapter')) {
+            $this->extend('upyun', function ($app, $config) {
+                return $this->createFlysystem(new \JellyBool\Flysystem\Upyun\UpyunAdapter($config['bucket'], $config['operator'], $config['password'], $config['domain'], Arr::get($config, 'protocol', 'https')), $config);
+            });
+        }
+
+        if (class_exists('\Arhitector\Yandex\Disk\Adapter\Flysystem')) {
+            $this->extend('yandex', function ($app, $config) {
+                return $this->createFlysystem(new \Arhitector\Yandex\Disk\Adapter\Flysystem(new Arhitector\Yandex\Disk([$config['access_token']]), Arr::get($config, 'prefix', 'app:/')), $config);
             });
         }
     }

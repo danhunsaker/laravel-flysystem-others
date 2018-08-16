@@ -200,6 +200,13 @@ return [
             // 'path'   => 'local://path/to/file.zip',
         ],
 
+        'backblaze' => [
+            'driver'          => 'backblaze',
+            'account_id'      => 'your-account-id',
+            'application_key' => 'your-app-key',
+            'bucket'          => 'your-bucket',
+        ],
+
         'bos' => [
             'driver'      => 'bos',
             'credentials' => [
@@ -208,8 +215,17 @@ return [
             ],
             'bucket'      => 'your-bucket',
 
-            // Optional BOS Setting
+            // Optional BOS Settings
             // 'endpoint'    => 'http://bj.bcebos.com',
+        ],
+
+        'clamav' => [
+            'driver'    => 'clamav',
+            'server'    => 'tcp://127.0.0.1:3310',
+            'drive'     => 'local',
+
+            // Optional ClamAV Settings
+            // 'copy_scan' => false,
         ],
 
         'cloudinary' => [
@@ -220,14 +236,14 @@ return [
         ],
 
         'dropbox' => [
-            'driver'           => 'dropbox',
-            'authToken'      => 'your-auth-token',
+            'driver'    => 'dropbox',
+            'authToken' => 'your-auth-token',
         ],
 
         'eloquent' => [
             'driver' => 'eloquent',
 
-            // Optional Eloquent Setting
+            // Optional Eloquent Settings
             // 'model'  => '\Rokde\Flysystem\Adapter\Model\FileModel',
         ],
 
@@ -237,26 +253,45 @@ return [
             'fallback' => 's3',
         ],
 
+        'gdrive' => [
+            'driver'            => 'gdrive',
+            'client_id'         => 'your-client-id',
+            'secret'            => 'your-secret',
+            'token'             => 'your-token',
+
+            // Optional GDrive Settings
+            // 'root'              => 'your-root-directory',
+            // 'paths_sheet'       => 'your-paths-sheet',
+            // 'paths_cache_drive' => 'local',
+        ],
+
         'github' => [
             'driver'  => 'github',
             'project' => 'yourname/project',
             'token'   => 'your-github-token',
         ],
 
-        'gdrive' => [
-            'driver'    => 'gdrive',
-            'client_id' => 'your-client-id',
-            'secret'    => 'your-secret',
-            'token'     => 'your-token',
+        'google' => [
+            'driver'     => 'google',
+            'project_id' => 'your-project-id',
+            'bucket'     => 'your-bucket',
+
+            // Optional Google Cloud Storage Settings
+            // 'prefix'     => 'prefix/path/for/drive',
+            // 'url'        => 'http://your.custom.cname/',
+            // 'key_file'   => 'path/to/file.json',
+            //
+            // Alternate value if twistor/flysystem-stream-wrapper is available
+            // 'key_file'   => 'local://path/to/file.json',
         ],
 
-        'google' => [
-            'driver'        => 'google',
-            'account'       => 'your-account',
-            'secret'        => 'your-secret',
-            'developer_key' => 'your-developer-key',
-            'p12_file'      => 'local://path/to/file.p12',
-            'bucket'        => 'your-bucket',
+        'http' => [
+            'driver'   => 'http',
+            'root'     => 'http://example.com',
+
+            // Optional HTTP Settings
+            // 'use_head' => true,
+            // 'context'  => [],
         ],
 
         'mirror' => [
@@ -271,19 +306,51 @@ return [
             // Options only needed for ignited/flysystem-onedrive
             // 'base_url'     => 'https://api.onedrive.com/v1.0/',
             // 'use_logger'   => false,
+
+            // Option only used by nicolasbeauvais/flysystem-onedrive
+            // 'root'         => 'root',
+        ],
+
+        'openstack' => [
+            'driver'     => 'openstack',
+            'auth_url'   => 'your-auth-url',
+            'region'     => 'your-region',
+            'user_id'    => 'your-user-id',
+            'password'   => 'your-password',
+            'project_id' => 'your-project-id',
+            'container'  => 'your-container',
         ],
 
         'oss' => [
             'driver'     => 'oss',
-            'access_id'  => 'your-access-id',
-            'access_key' => 'your-access-key',
-            'bucket'     => 'your-bucket',
+            'access_id'  => env('OSS_ACCESS_KEY_ID'),
+            'access_key' => env('OSS_ACCESS_KEY_SECRET'),
+            'endpoint'   => env('OSS_ENDPOINT'),
+            'bucket'     => env('OSS_BUCKET'),
 
             // Optional OSS Settings
-            // 'endpoint'   => '',
             // 'prefix'     => '',
             // 'region'     => '',    // One of 'hangzhou', 'qingdao', 'beijing', 'hongkong',
             //                        // 'shenzhen', 'shanghai', 'west-1' and 'southeast-1'
+        ],
+
+        'pdo' => [
+            'driver'   => 'pdo',
+            'database' => 'default',
+        ],
+
+        'qcloud' => [
+            'driver'     => 'qcloud',
+            'app_id'     => 'your-app-id',
+            'secret_id'  => 'your-secret-id',
+            'secret_key' => 'your-secret-key',
+            'bucket'     => 'your-bucket-name',
+            'protocol'   => 'https',
+
+            // Optional Tencent/Qcloud COS Settings
+            // 'domain'     => 'your-domain',
+            // 'timeout'    => 60,
+            // 'region'     => 'gz',
         ],
 
         'qiniu' => [
@@ -291,9 +358,7 @@ return [
             'accessKey' => 'your-access-key',
             'secretKey' => 'your-secret-key',
             'bucket'    => 'your-bucket',
-
-            // Optional Qiniu Settings
-            // 'domain'    => '',
+            'domain'    => 'xxxx.qiniudn.com',
         ],
 
         'redis' => [
@@ -309,11 +374,26 @@ return [
 
             // Optional Runabove Settings
             // 'container' => 'container',
-            // 'region'    => 'SBG1',   // One of 'SBG1', 'BHS1' and 'GRA1'
+            // 'region'    => 'SBG1',   // One of 'SBG1', 'BHS1', and 'GRA1'
         ],
 
-        'sae' => [
-            'driver' => 'sae',
+        'selectel' => [
+            'driver'    => 'selectel',
+            'username'  => 'your-username',
+            'password'  => 'your-password',
+            'container' => 'your-container',
+
+            // Optional Selectel Settings
+            // 'domain'    => '',
+        ],
+
+        'sharefile' => [
+            'driver'    => 'sharefile',
+            'hostname'  => 'sharefile.example.com',
+            'client_id' => 'your-client-id',
+            'secret'    => 'your-secret',
+            'username'  => 'your-username',
+            'password'  => 'your-password',
         ],
 
         'smb' => [
@@ -330,6 +410,23 @@ return [
             // Optional TempDir Settings
             // 'prefix'  => '',
             // 'tempdir' => '/tmp',
+        ],
+
+        'upyun' => [
+            'driver'   => 'upyun',
+            'bucket'   => 'your-bucket',
+            'operator' => 'operator-name',
+            'password' => 'operator-password',
+            'protocol' => 'https',
+            'domain'   => 'example.b0.upaiyun.com',
+        ],
+
+        'yandex' => [
+            'driver'       => 'yandex',
+            'access_token' => 'your-access-token',
+
+            // Optional Yandex Settings
+            // 'prefix'       => 'app:/',
         ],
 
     ],

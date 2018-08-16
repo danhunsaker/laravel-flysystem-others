@@ -4,22 +4,27 @@ php:
   - '7.1'
   - '7.0'
   - '5.6'
-  - '5.5.9'
   - '5.5'
   - '5.4'
   - hhvm
+
+matrix:
+  allow_failures:
+    - php: '5.5'
+    - php: '5.4'
+    - php: hhvm
+
 env:
   matrix:
     - PREFER_LOWEST=""
     - PREFER_LOWEST="--prefer-lowest"
-matrix:
-  allow_failures:
-    - php: '5.4'
-    - php: hhvm
+
 install:
   - if [[ "$(phpenv version-name)" != "hhvm" ]]; then echo 'error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
   - travis_retry composer update --no-interaction --prefer-source $PREFER_LOWEST
+
 script:
   - phpunit -v --color -c .travis-phpunit$([[ "$(phpenv version-name)" == "hhvm" ]] && echo -n "-hhvm").xml
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
