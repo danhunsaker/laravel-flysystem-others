@@ -2,6 +2,7 @@
 
 [![Software License](https://img.shields.io/packagist/l/danhunsaker/laravel-flysystem-others.svg?style=flat-square)](LICENSE)
 [![Gitter](https://img.shields.io/gitter/room/danhunsaker/laravel-flysystem-others.svg?style=flat-square)](https://gitter.im/danhunsaker/laravel-flysystem-others)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/danhunsaker.svg?style=flat-square)](https://liberapay.com/danhunsaker/)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/danhunsaker/laravel-flysystem-others.svg?label=stable&style=flat-square)](https://github.com/danhunsaker/laravel-flysystem-others/releases)
 [![Latest Unstable Version](https://img.shields.io/packagist/vpre/danhunsaker/laravel-flysystem-others.svg?label=unstable&style=flat-square)](https://github.com/danhunsaker/laravel-flysystem-others)
