@@ -352,7 +352,7 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\Arhitector\Yandex\Disk\Adapter\Flysystem')) {
             $this->extend('yandex', function ($app, $config) {
-                return $this->createFlysystem(new \Arhitector\Yandex\Disk\Adapter\Flysystem(new Arhitector\Yandex\Disk([$config['access_token']]), Arr::get($config, 'prefix', 'app:/')), $config);
+                return $this->createFlysystem(new \Arhitector\Yandex\Disk\Adapter\Flysystem(new \Arhitector\Yandex\Disk($config['access_token']), Arr::get($config, 'prefix', 'app:/')), $config);
             });
         }
     }
