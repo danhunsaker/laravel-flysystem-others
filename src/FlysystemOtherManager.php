@@ -240,7 +240,14 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\Integral\Flysystem\Adapter\PDOAdapter')) {
             $this->extend('pdo', function ($app, $config) {
-                return $this->createFlysystem(new \Integral\Flysystem\Adapter\PDOAdapter(DB::connection($config['database'])->getPdo()));
+                return $this->createFlysystem(
+                    new \Integral\Flysystem\Adapter\PDOAdapter(
+                        \DB::connection($config['database'])->getPdo(),
+                        $config['table'],
+                        array_key_exists('table_prefix', $config) ? $config['table_prefix'] : null
+                    ),
+                    $config
+                );
             });
         } elseif (class_exists('\Phlib\Flysystem\Pdo\PdoAdapter')) {
             $this->extend('pdo', function ($app, $config) {
