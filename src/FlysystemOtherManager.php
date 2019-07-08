@@ -251,7 +251,17 @@ class FlysystemOtherManager extends FlysystemManager
             });
         } elseif (class_exists('\Phlib\Flysystem\Pdo\PdoAdapter')) {
             $this->extend('pdo', function ($app, $config) {
-                return $this->createFlysystem(new \Phlib\Flysystem\Pdo\PdoAdapter(\DB::connection($config['database'])->getPdo()), $config);
+                $driverConfig = Arr::only($config, [
+					'database',
+					'visbility',
+					'table_prefix',
+					'enable_compression',
+					'chunk_size',
+					'temp_dir',
+					'disable_mysql_buffering',
+				]);
+
+                return $this->createFlysystem(new \Phlib\Flysystem\Pdo\PdoAdapter(\DB::connection($config['database'])->getPdo()), $config, $driverConfig);
             });
         }
 
