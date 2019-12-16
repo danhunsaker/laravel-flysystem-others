@@ -397,11 +397,12 @@ return [
         ],
 
         'smb' => [
-            'driver'   => 'smb',
-            'host'     => 'smb.example.com',
-            'username' => 'your-username',
-            'password' => 'your-password',
-            'path'     => 'path/to/shared/directory/for/root',
+            'driver'    => 'smb',
+            'host'      => 'smb.example.com',
+            'username'  => 'your-username',
+            'password'  => 'your-password',
+            'workgroup' => 'workgroup', // OR DOMAIN
+            'path'      => 'path/to/shared/directory/for/root',
         ],
 
         'temp' => [

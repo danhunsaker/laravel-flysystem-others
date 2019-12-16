@@ -29,7 +29,7 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\mgriego\Flysystem\ClamAV\ClamAvScannerAdapter')) {
             $this->extend('clamav', function ($app, $config) {
-                return $this->createFlysystem(new \mgriego\Flysystem\ClamAV\ClamAvScannerAdapter(new \Xenolope\Quahog\Client((new \Socket\Raw\Factory())->createClient($config['server'])), $this->disk($config['drive'])->getAdapter(), Arr::get($config, 'copy_scan', false)));
+                return $this->createFlysystem(new \mgriego\Flysystem\ClamAV\ClamAvScannerAdapter(new \Xenolope\Quahog\Client((new \Socket\Raw\Factory())->createClient($config['server'])), $this->disk($config['drive'])->getAdapter(), Arr::get($config, 'copy_scan', false)), $config);
             });
         }
 
@@ -134,11 +134,11 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\Twistor\Flysystem\GuzzleAdapter')) {
             $this->extend('http', function ($app, $config) {
-                return $this->createFlysystem(new \Twistor\Flysystem\GuzzleAdapter($config['root']));
+                return $this->createFlysystem(new \Twistor\Flysystem\GuzzleAdapter($config['root']), $config);
             });
         } elseif (class_exists('\Twistor\Flysystem\Http\HttpAdapter')) {
             $this->extend('http', function ($app, $config) {
-                return $this->createFlysystem(new \Twistor\Flysystem\Http\HttpAdapter($config['root'], Arr::get($config, 'use_head', true), Arr::get($config, 'context')));
+                return $this->createFlysystem(new \Twistor\Flysystem\Http\HttpAdapter($config['root'], Arr::get($config, 'use_head', true), Arr::get($config, 'context')), $config);
             });
         }
 
@@ -251,7 +251,7 @@ class FlysystemOtherManager extends FlysystemManager
             });
         } elseif (class_exists('\Phlib\Flysystem\Pdo\PdoAdapter')) {
             $this->extend('pdo', function ($app, $config) {
-                return $this->createFlysystem(new \Phlib\Flysystem\Pdo\PdoAdapter(DB::connection($config['database'])->getPdo()));
+                return $this->createFlysystem(new \Phlib\Flysystem\Pdo\PdoAdapter(DB::connection($config['database'])->getPdo()), $config);
             });
         }
 
@@ -273,15 +273,15 @@ class FlysystemOtherManager extends FlysystemManager
                     $cosconfig['cdn'] = $config['domain'];
                 }
 
-                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv5\Adapter($cosconfig));
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv5\Adapter($cosconfig), $config);
             });
         } elseif (class_exists('\Freyo\Flysystem\QcloudCOSv4\Adapter')) {
             $this->extend('qcloud', function ($app, $config) {
-                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv4\Adapter(Arr::except($config, ['driver'])));
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv4\Adapter(Arr::except($config, ['driver'])), $config);
             });
         } elseif (class_exists('\Freyo\Flysystem\QcloudCOSv3\Adapter')) {
             $this->extend('qcloud', function ($app, $config) {
-                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv3\Adapter(Arr::except($config, ['driver', 'region'])));
+                return $this->createFlysystem(new \Freyo\Flysystem\QcloudCOSv3\Adapter(Arr::except($config, ['driver', 'region'])), $config);
             });
         }
 
@@ -338,7 +338,11 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\RobGridley\Flysystem\Smb\SmbAdapter')) {
             $this->extend('smb', function ($app, $config) {
-                $server = new \Icewind\SMB\Server($config['host'], $config['username'], $config['password']);
+                if (class_exists(`\Icewind\SMB\Server`)) {
+                    $server = new \Icewind\SMB\Server($config['host'], $config['username'], $config['password']);
+                } elseif (class_exists(`\Icewind\SMB\ServerFactory`)) {
+                    $server = with(new \Icewind\SMB\ServerFactory)->createServer($config['host'], new \Icewind\SMB\BasicAuth($config['username'], $config['workgroup'], $config['password']));
+                }
                 $share = $server->getShare($config['path']);
 
                 return $this->createFlysystem(new \RobGridley\Flysystem\Smb\SmbAdapter($share), $config);
