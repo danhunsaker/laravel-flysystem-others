@@ -338,9 +338,9 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\RobGridley\Flysystem\Smb\SmbAdapter')) {
             $this->extend('smb', function ($app, $config) {
-                if (class_exists(`\Icewind\SMB\Server`)) {
+                if (class_exists('\Icewind\SMB\Server')) {
                     $server = new \Icewind\SMB\Server($config['host'], $config['username'], $config['password']);
-                } elseif (class_exists(`\Icewind\SMB\ServerFactory`)) {
+                } elseif (class_exists('\Icewind\SMB\ServerFactory')) {
                     $server = with(new \Icewind\SMB\ServerFactory)->createServer($config['host'], new \Icewind\SMB\BasicAuth($config['username'], $config['workgroup'], $config['password']));
                 }
                 $share = $server->getShare($config['path']);
