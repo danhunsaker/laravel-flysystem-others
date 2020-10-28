@@ -116,19 +116,19 @@ class FlysystemOtherManager extends FlysystemManager
             });
         }
 
-        if (class_exists('\CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter')) {
-            $this->extend('google', function ($app, $config) {
-                return $this->createFlysystem(new \CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter(new \Google\Cloud\Storage\StorageClient([
-                    'projectId' => $config['project_id'],
-                    'keyFilePath' => Arr::get($config, 'key_file'),
-                ]), Arr::only($config, ['bucket', 'prefix', 'url'])), $config);
-            });
-        } elseif (class_exists('\Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter')) {
+        if (class_exists('\Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter')) {
             $this->extend('google', function ($app, $config) {
                 return $this->createFlysystem(new \Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter(new \Google\Cloud\Storage\StorageClient([
                     'projectId' => $config['project_id'],
                     'keyFilePath' => Arr::get($config, 'key_file'),
                 ]), $config['bucket']), $config);
+            });
+        } elseif (class_exists('\CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter')) {
+            $this->extend('google', function ($app, $config) {
+                return $this->createFlysystem(new \CedricZiel\FlysystemGcs\GoogleCloudStorageAdapter(new \Google\Cloud\Storage\StorageClient([
+                    'projectId' => $config['project_id'],
+                    'keyFilePath' => Arr::get($config, 'key_file'),
+                ]), Arr::only($config, ['bucket', 'prefix', 'url'])), $config);
             });
         }
 
