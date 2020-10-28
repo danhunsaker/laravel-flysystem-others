@@ -337,6 +337,11 @@ return [
         'pdo' => [
             'driver'   => 'pdo',
             'database' => 'default',
+            'table_prefix' => 'flysystem',
+            'enable_compression' => true,
+            'chunk_size' => 1048576, //1MB
+            'temp_dir' => sys_get_temp_dir(),
+            'disable_mysql_buffering' => true,
         ],
 
         'qcloud' => [
