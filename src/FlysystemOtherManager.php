@@ -394,9 +394,9 @@ class FlysystemOtherManager extends FlysystemManager
     /**
      * {@inheritdoc}
      */
-    protected function resolve($name)
+    protected function resolve($name, $config = null)
     {
-        $adapter = parent::resolve($name);
+        $adapter = parent::resolve($name, $config);
 
         if (class_exists('Twistor\FlysystemStreamWrapper')) {
             \Twistor\FlysystemStreamWrapper::register($name, $adapter->getDriver());
