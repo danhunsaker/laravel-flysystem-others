@@ -342,7 +342,7 @@ class FlysystemOtherManager extends FlysystemManager
 
         if (class_exists('\Kapersoft\FlysystemSharefile\SharefileAdapter')) {
             $this->extend('sharefile', function ($app, $config) {
-                return $this->createFlysystem(new \Kapersoft\FlysystemSharefile\SharefileAdapter(new Kapersoft\Sharefile\Client($config['hostname'], $config['client_id'], $config['secret'], $config['username'], $config['password'])), $config);
+                return $this->createFlysystem(new \Kapersoft\FlysystemSharefile\SharefileAdapter(new \Kapersoft\Sharefile\Client($config['hostname'], $config['client_id'], $config['secret'], $config['username'], $config['password'])), $config);
             });
         }
 
